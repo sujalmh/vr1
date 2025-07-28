@@ -1,0 +1,15 @@
+openai
+pymilvus>=2.4.4
+tqdm
+streamlit
+certifi
+sentence_transformers
+pypdf
+langchain
+langchain_community
+mistralai
+mistralai
+tiktoken
+google-genai
+uvicorn
+fastapi

@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev       # development
+      - test      # business testing
+      - main      # production
+
+jobs:
+  dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to DEV via SSH (No Docker)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /path/to/project
+            git pull origin dev
+            pkill -f "python main.py" || true
+            nohup python3 loader/main.py &
+            nohup python3 retrieval/main.py &
+
+  test:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to TEST (Docker on VM: Port 6000)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.TEST_HOST }}
+          username: ${{ secrets.TEST_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /path/to/project
+            git pull origin test
+            bash deploy.sh loader test 6000
+            bash deploy.sh retrieval test 6001
+
+  prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to PROD (Docker on Port 7000)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /path/to/project
+            git pull origin main
+            bash deploy.sh loader prod 7000
+            bash deploy.sh retrieval prod 7001
