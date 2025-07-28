@@ -33,7 +33,7 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -p "$PORT:$PORT" \
   --name "$CONTAINER_NAME" \
-  "$IMAGE_NAME"
+  "$IMAGE_NAME" \
   uvicorn main:app --host 0.0.0.0 --port "$PORT"
 
 echo "✅ Deployment of $SERVICE in $STAGE stage complete."
