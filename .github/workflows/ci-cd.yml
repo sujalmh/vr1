@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DEV_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /mnt/data/sujalmh/vr
+            cd /mnt/data/sujalmh/vr/dev
             git pull origin dev
             pkill -f "python main.py" || true
             nohup python3 loader/main.py &
@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.TEST_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /path/to/project
+            cd /mnt/data/sujalmh/vr/test
             git pull origin test
             bash deploy.sh loader test 6000
             bash deploy.sh retrieval test 6001
@@ -61,7 +61,7 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /path/to/project
+            cd /mnt/data/sujalmh/vr/prod
             git pull origin main
             bash deploy.sh loader prod 7000
             bash deploy.sh retrieval prod 7001
