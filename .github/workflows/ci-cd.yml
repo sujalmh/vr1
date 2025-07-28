@@ -24,10 +24,20 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin dev
-            pkill -f "python main.py" || true
+            fuser -k 7210/tcp || true
+            fuser -k 7220/tcp || true
+            
+            cd loader
+            source venv/bin/activate
+            pip install -r requirements.txt
             nohup uvicorn loader.main:app --host 0.0.0.0 --port 7210 > loader.log 2>&1 &
-            nohup uvicorn retrieval.main:app --host 0.0.0.0 --port 7220 > retrieval.log 2>&1 &
+            deactivate
 
+            cd ../retrieval
+            source venv/bin/activate
+            pip install -r requirements.txt
+            nohup uvicorn retrieval.main:app --host 0.0.0.0 --port 7220 > retrieval.log 2>&1 &
+            deactivate
 
   test:
     if: github.ref == 'refs/heads/test'
