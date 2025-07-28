@@ -25,8 +25,8 @@ jobs:
             cd /mnt/data/sujalmh/vr
             git pull origin dev
             pkill -f "python main.py" || true
-            nohup python3 loader/main.py &
-            nohup python3 retrieval/main.py &
+            nohup uvicorn loader/main.py &
+            nohup uvicorn retrieval/main.py &
 
   test:
     if: github.ref == 'refs/heads/test'
