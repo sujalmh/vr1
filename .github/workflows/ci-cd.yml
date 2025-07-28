@@ -24,19 +24,19 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin dev
-            fuser -k 7210/tcp || true
-            fuser -k 7220/tcp || true
+            fuser -k 8810/tcp || true
+            fuser -k 8820/tcp || true
 
             cd loader
             source venv/bin/activate
             pip install -r requirements.txt
-            nohup uvicorn main:app --host 0.0.0.0 --port 7210 > loader.log 2>&1 &
+            nohup uvicorn main:app --host 0.0.0.0 --port 8810 > loader.log 2>&1 &
             deactivate
 
             cd ../retrieval
             source venv/bin/activate
             pip install -r requirements.txt
-            nohup uvicorn main:app --host 0.0.0.0 --port 7220 > retrieval.log 2>&1 &
+            nohup uvicorn main:app --host 0.0.0.0 --port 8820 > retrieval.log 2>&1 &
             deactivate
 
   test:
@@ -55,8 +55,8 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin test
-            bash deploy.sh loader test 7211
-            bash deploy.sh retrieval test 7221
+            bash deploy.sh loader test 8811
+            bash deploy.sh retrieval test 8821
 
   prod:
     if: github.ref == 'refs/heads/main'
@@ -65,7 +65,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Deploy to PROD (Docker on Port 7000)
+      - name: Deploy to PROD
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.PROD_HOST }}
@@ -74,5 +74,5 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin main
-            bash deploy.sh loader prod 7213
-            bash deploy.sh retrieval prod 7223
+            bash deploy.sh loader prod 8813
+            bash deploy.sh retrieval prod 8823
