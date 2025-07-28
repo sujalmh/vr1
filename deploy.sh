@@ -1,4 +1,5 @@
 #!/bin/bash
+# EXPOSE 8686
 
 set -e  # Exit immediately on any command failure
 set -o pipefail
@@ -6,6 +7,7 @@ set -o pipefail
 SERVICE=$1        # loader or retrieval
 STAGE=$2          # test or prod
 PORT=$3           # 6000 or 7000
+ENTRYPOINT=$4  # Optional, not used in this script
 
 IMAGE_NAME="${SERVICE}:${STAGE}"
 CONTAINER_NAME="${SERVICE}-${STAGE}"
@@ -34,6 +36,6 @@ docker run -d \
   -p "$PORT:$PORT" \
   --name "$CONTAINER_NAME" \
   "$IMAGE_NAME" \
-  uvicorn main:app --host 0.0.0.0 --port "$PORT"
+  uvicorn "$ENTRYPOINT":app --host 0.0.0.0 --port "$PORT"
 
 echo "✅ Deployment of $SERVICE in $STAGE stage complete."
