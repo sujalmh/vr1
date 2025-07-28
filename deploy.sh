@@ -23,7 +23,7 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 echo "🔧 Building Docker image: $IMAGE_NAME"
-docker build -t "$IMAGE_NAME" "$SERVICE_DIR"
+docker build --no-cache -t "$IMAGE_NAME" "$SERVICE_DIR"
 
 echo "🧹 Stopping and removing old container if it exists..."
 docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
