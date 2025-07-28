@@ -23,7 +23,7 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 echo "🔧 Building Docker image: $IMAGE_NAME"
-docker build -t "$IMAGE_NAME" "$SERVICE_DIR"
+docker build --no-cache -t "$IMAGE_NAME" "$SERVICE_DIR"
 
 echo "🧹 Stopping and removing old container if it exists..."
 docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
@@ -33,6 +33,7 @@ docker run -d \
   --env-file "$ENV_FILE" \
   -p "$PORT:$PORT" \
   --name "$CONTAINER_NAME" \
-  "$IMAGE_NAME"
+  "$IMAGE_NAME" \
+  uvicorn main:app --host 0.0.0.0 --port "$PORT"
 
 echo "✅ Deployment of $SERVICE in $STAGE stage complete."
