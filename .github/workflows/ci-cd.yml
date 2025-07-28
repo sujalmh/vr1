@@ -36,7 +36,7 @@ jobs:
             cd ../retrieval
             source venv/bin/activate
             pip install -r requirements.txt
-            nohup uvicorn main:app --host 0.0.0.0 --port 8060 > retrieval.log 2>&1 &
+            nohup uvicorn cpi_top5_results_v5_vm_experimental_citeurl:app --host 0.0.0.0 --port 8060 > retrieval.log 2>&1 &
             deactivate
 
   test:
@@ -56,7 +56,7 @@ jobs:
             cd /mnt/data/sujalmh/vr
             git pull origin test
             bash deploy.sh loader test 8051
-            bash deploy.sh retrieval test 8061
+            bash deploy.sh retrieval test 8061 cpi_top5_results_v5_vm_experimental_citeurl
 
   prod:
     if: github.ref == 'refs/heads/main'
@@ -75,4 +75,4 @@ jobs:
             cd /mnt/data/sujalmh/vr
             git pull origin main
             bash deploy.sh loader prod 8052
-            bash deploy.sh retrieval prod 8062
+            bash deploy.sh retrieval prod 8062 cpi_top5_results_v5_vm_experimental_citeurl
