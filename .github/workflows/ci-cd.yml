@@ -25,8 +25,9 @@ jobs:
             cd /mnt/data/sujalmh/vr
             git pull origin dev
             pkill -f "python main.py" || true
-            nohup uvicorn loader/main.py &
-            nohup uvicorn retrieval/main.py &
+            nohup uvicorn loader.main:app --host 0.0.0.0 --port 7210 > loader.log 2>&1 &
+            nohup uvicorn retrieval.main:app --host 0.0.0.0 --port 7220 > retrieval.log 2>&1 &
+
 
   test:
     if: github.ref == 'refs/heads/test'
@@ -44,8 +45,8 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin test
-            bash deploy.sh loader test 6000
-            bash deploy.sh retrieval test 6001
+            bash deploy.sh loader test 7211
+            bash deploy.sh retrieval test 7221
 
   prod:
     if: github.ref == 'refs/heads/main'
@@ -63,5 +64,5 @@ jobs:
           script: |
             cd /mnt/data/sujalmh/vr
             git pull origin main
-            bash deploy.sh loader prod 7000
-            bash deploy.sh retrieval prod 7001
+            bash deploy.sh loader prod 7213
+            bash deploy.sh retrieval prod 7223
