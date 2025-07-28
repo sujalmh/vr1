@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DEV_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /path/to/project
+            cd /mnt/data/sujalmh/vr
             git pull origin dev
             pkill -f "python main.py" || true
             nohup python3 loader/main.py &
